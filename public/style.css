@@ -70,9 +70,6 @@ canvas {
 	
 }
 
-
-
-
 /*TEXT FIELDS*/
 .talk-field,
 .lobby-field {
@@ -93,7 +90,6 @@ canvas {
     /*margin-right:4px;*/
     margin-top:4px;
 }
-
 
 /*USERNAME*/
 

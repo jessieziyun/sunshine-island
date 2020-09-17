@@ -1389,7 +1389,7 @@ function update() {
         if (longText != "" && nickName != "") {
 
             noStroke();
-            textFont(font, FONT_SIZE);
+            textFont(font, FONT_SIZE * 2);
             textLeading(TEXT_LEADING);
 
             //dramatic text on black
@@ -1400,9 +1400,9 @@ function update() {
                 else
                     textAlign(CENTER, CENTER);
 
-                fill(UI_BG);
-                rect(0, 0, width, height);
-                fill(LABEL_NEUTRAL_COLOR);
+                fill(0, 178, 169);
+                // rect(0, 0, width, height);
+                // fill(LABEL_NEUTRAL_COLOR);
                 //-1 to avoid blurry glitch
                 text(longText, LONG_TEXT_PADDING, LONG_TEXT_PADDING, width - LONG_TEXT_PADDING * 2, height - LONG_TEXT_PADDING * 2 - 1);
             }
@@ -1426,15 +1426,15 @@ function update() {
                     tw = textWidth(longText + " ");
 
                 var rw = tw + LONG_TEXT_PADDING * 2;
-                var rh = th + LONG_TEXT_PADDING * 2;
+                var rh = th + LONG_TEXT_PADDING * 2 + 20;
 
-                fill(UI_BG);
+                fill(0, 178, 169);
 
                 rect(floor(width / 2 - rw / 2), floor(height / 2 - rh / 2), floor(rw), floor(rh));
                 //rect(20, 20, 100, 50);
 
                 fill(LABEL_NEUTRAL_COLOR);
-                text(longText, floor(width / 2 - tw / 2 + LONG_TEXT_PADDING - 1), floor(height / 2 - th / 2) + TEXT_LEADING - 3, floor(tw));
+                text(longText, floor(width / 2 - tw / 2 + LONG_TEXT_PADDING - 1)-20, floor(height / 2 - th / 2) + TEXT_LEADING, floor(tw)+40);
             }
         }//end long text
 
