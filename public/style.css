@@ -1,6 +1,6 @@
 @font-face {
-	font-family: monogram;
-	src: url("assets/monogram_extended.ttf");
+	font-family: Cubano;
+	src: url("assets/Cubano-Regular.otf");
 }
 
 html {
@@ -9,19 +9,22 @@ html {
 }
 
 body {
-	font-family: monogram;
+	font-family: Cubano;
 	font-size: 32px;
+	width: 100vw;
+	height: 100vh;
 	margin: 0px;
 	padding: 0px;
 	background-color: #000;
 	font-smooth: never;
 	-webkit-font-smoothing: none;
 	color: white;
+	/* overflow: hidden; */
 }
 
 #canvas-container {
-	width: 800px;
-	height: 600px;
+	width: 100%;
+	height: calc(100% - 100px);
 	margin: auto;
 	color:#000;
 }
@@ -73,13 +76,13 @@ canvas {
 /*TEXT FIELDS*/
 .talk-field,
 .lobby-field {
-	font-family: monogram;
+	font-family: Cubano;
 	border: none;
 	padding-top: 4px;
 	padding-bottom: 10px;
 	padding-left: 4px;
 	outline: none;
-    font-size: 64px;
+    font-size: 24px;
     background-color: white;
 }
 
@@ -95,13 +98,14 @@ canvas {
 /*USERNAME*/
 
 .lobby-message {
-    font-size: 64px;
-    margin-bottom: 32px;
+    font-size: 32px;
+	margin-bottom: 32px;
+	color: #00b2a9;
 }
 
 .lobby-error-message {
 	font-size: 32px;
-	color: #ff004d;
+	color: #00b2a9;
 }
 
 .lobby-field {
@@ -115,14 +119,14 @@ canvas {
 .join-button,
 .user-button,
 .avatar-button {
-	font-family: monogram;
-	font-size: 64px;
+	font-family: Cubano;
+	font-size: 24px;
 	margin: 0px;
 	display: inline-block;
 	border: none;
 	text-align: center;
 	color: white;
-    background: #ff004d;
+    background: #00b2a9;
     outline: none;
     border-bottom: 4px solid#424242;
     margin-left: auto;
@@ -172,7 +176,7 @@ canvas {
 
 .info a:hover {
 	text-decoration: none;
-	color:#ff77a8;;
+	color:#b6fffb;;
 }
 
 
@@ -202,7 +206,7 @@ canvas {
 .user-button:active,
 .avatar-button:active,
 .join-button:active {
-    background: #ff77a8;
+    background: #b6fffb;
     border-bottom: none;
     border-right: none;
     margin-top: 4px;
@@ -212,14 +216,14 @@ canvas {
 .user-button:hover,
 .avatar-button:hover,
 .join-button:hover {
-	background: #ff77a8;
+	background: #b6fffb;
 }
 
 /*Animate join to make sure people don't miss it*/
 @keyframes glowing {
-    0% { background-color: #ff004d; }
-    50% { background-color: #ff77a8;  }
-    100% { background-color: #ff004d;  }
+    0% { background-color: #00b2a9; }
+    50% { background-color: #b6fffb;  }
+    100% { background-color: #00b2a9;  }
 }
 
 .join-button {
@@ -244,8 +248,3 @@ canvas {
 	transform: translate(-50%, -80%);
 	text-align: center;
 }
-
-
-
-
-

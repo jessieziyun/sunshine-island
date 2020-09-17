@@ -27,8 +27,8 @@ var SOUND = true;
 var AFK = false;
 
 //native canvas resolution
-var NATIVE_WIDTH = 128;
-var NATIVE_HEIGHT = 100;
+var NATIVE_WIDTH = window.innerWidth;
+var NATIVE_HEIGHT = window.innerHeight;
 
 /*
 The original resolution (pre canvas stretch) is 128x100 multiplied by 2 because
@@ -73,15 +73,15 @@ var ASSETS_FOLDER = "assets/";
 //text vars
 //MONOSPACED FONT
 //thank you https://datagoblin.itch.io/monogram
-var FONT_FILE = "assets/monogram_extended.ttf";
-var FONT_SIZE = 16; //to avoid blur
+var FONT_FILE = "assets/Cubano-Regular.otf";
+var FONT_SIZE = 10; //to avoid blur
 var font;
 var TEXT_H = 8;
 var TEXT_PADDING = 3;
 var TEXT_LEADING = TEXT_H + 4;
 
-var LOGO_FILE = "logo.png";
-var MENU_BG_FILE = "menu_white.png";
+var LOGO_FILE = "welcome.png";
+var MENU_BG_FILE = "white.png";
 
 //how long does the text bubble stay
 var BUBBLE_TIME = 8;
@@ -212,52 +212,10 @@ var dataLoaded = false;
 var gameStarted = false;
 
 
-
-/*
-Things are quite asynchronous here. This is the startup sequence:
-
-* preload() preload general assets - avatars, icons etc
-* setup() assets loaded - slice, create canvas and create a temporary socket that only listens to DATA
-* wait for settings and room data from the server 
-* data is received, ROOM object exists BUT its damn images aren't loaded yet
-* check the loading images in draw() until they all look like something
-* when room images are loaded go to setupGame() and to lurking mode or fast track with a random username due to QUICK_LOGIN
-    In lurking mode (username "") you can see everybody, you are invisible and can't do anything
-    BUT you are technically in the room
-* when click on the "join" button go to the username and avatar selection screens, back and forth for name validation
-* when name is approved the player joins ("playerJoined" event) the room again with the real name and avatar
-* upon room join all clients send their intro information and the scene is populated
-* changing room is handled in the same way with "playerJoined"
-* if server restarts the assets and room data is kept on the clients and that's also a connect > playerJoined sequence
-*/
-
-
-
 //setup is called when all the assets have been loaded
 function preload() {
 
     document.body.style.backgroundColor = PAGE_COLOR;
-
-    //avatar spritesheets are programmatically tinted so they need to be pimages before being loaded as spritesheets
-
-    //METHOD 1:
-    //avatar spritesheets are numbered and sequential, one per animation like straight outta Piskel
-    //it's a lot of requests for a bunch of tiny images
-    /*
-    for (var i = 0; i < AVATARS; i++) {
-        walkSheets[i] = loadImage(ASSETS_FOLDER + "character" + i + ".png");
-    }
-
-    for (var i = 0; i < AVATARS; i++) {
-        emoteSheets[i] = loadImage(ASSETS_FOLDER + "character" + i + "-emote.png");
-    }
-    */
-
-    //METHOD 2:
-    //all spritesheets are packed in one long file, preloaded and split on setup
-    //packed with this tool  https://www.codeandweb.com/free-sprite-sheet-packer
-    //layout horizontal, 0 padding (double check that)
-
 
     allSheets = loadImage(ASSETS_FOLDER + ALL_AVATARS_SHEET);
 
@@ -270,9 +228,6 @@ function preload() {
         var b = blue(rc);
         REF_COLORS_RGB[i] = [r, g, b];
     }
-
-
-
 
     //to make the palette swap faster I save colors as arrays 
     for (var i = 0; i < HAIR_COLORS.length; i++) {
@@ -317,7 +272,7 @@ function preload() {
     menuBg = loadImage(ASSETS_FOLDER + MENU_BG_FILE);
     arrowButton = loadImage(ASSETS_FOLDER + "arrowButton.png");
 
-    var logoSheet = loadSpriteSheet(ASSETS_FOLDER + LOGO_FILE, 66, 82, 4);
+    var logoSheet = loadSpriteSheet(ASSETS_FOLDER + LOGO_FILE, 804, 77, 1);
     logo = loadAnimation(logoSheet);
     logo.frameDelay = 10;
 
@@ -359,12 +314,11 @@ function preload() {
 
 }
 
-
 //this is called when the assets are loaded
 function setup() {
 
     //create a canvas
-    canvas = createCanvas(WIDTH, HEIGHT);
+    canvas = createCanvas(window.innerWidth, window.innerHeight - 100);
     //accept only the clicks on the canvas (not the ones on the UI)
     canvas.mousePressed(canvasPressed);
     canvas.mouseReleased(canvasReleased);
@@ -373,7 +327,7 @@ function setup() {
     canvas.parent("canvas-container");
 
     //adapt it to the browser window 
-    scaleCanvas();
+    // scaleCanvas();
 
     //since my avatars are pixelated and scaled I kill the antialiasing on canvas
     noSmooth();
@@ -450,22 +404,7 @@ function setup() {
                             room.musicLoop = loadSound(ASSETS_FOLDER + room.music);
                             room.musicLoop.playMode('restart');
                         }
-
-
-                        //preload sprites if any
-                        if (ROOMS[roomId].things != null)
-                            for (var id in ROOMS[roomId].things) {
-                                var spr = ROOMS[roomId].things[id];
-                                spr.spriteGraphics = loadImage(ASSETS_FOLDER + spr.file);
-                            }
                     }
-                }
-
-                //load the misc images from data
-                var imageData = DATA.IMAGES;
-                IMAGES = {};
-                for (var i = 0; i < imageData.length; i++) {
-                    IMAGES[imageData[i][0]] = loadImage(ASSETS_FOLDER + imageData[i][1]);
                 }
 
                 //load the misc images from data
@@ -629,7 +568,7 @@ function newGame() {
     });
 
     //paint background
-    background(UI_BG);
+    background('#ffffff');
 
     //initialize players as object
     players = {};
@@ -1145,13 +1084,13 @@ function update() {
     else if (screen == "avatar") {
         image(menuBg, 0, 0, WIDTH, HEIGHT);
 
-        textFont(font, FONT_SIZE * 2);
+        textFont(font, FONT_SIZE * 4);
         textAlign(CENTER, BASELINE);
-        fill(0);
-        text("Body", 24 * ASSET_SCALE, 44 * ASSET_SCALE);
-        text("Color", 105 * ASSET_SCALE, 44 * ASSET_SCALE);
+        fill(0, 178, 169);
+        text("Body", windowWidth / 2 - 150, windowHeight / 2 - 50);
+        text("Color", windowWidth / 2 + 150, windowHeight / 2 - 50);
 
-        text("Choose your avatar", 64 * ASSET_SCALE, 18 * ASSET_SCALE);
+        text("Choose your avatar", windowWidth / 2, windowHeight / 2 - 150);
 
         menuGroup.draw();
 
@@ -1174,7 +1113,7 @@ function update() {
         }
 
         //draw a background
-        background(UI_BG);
+        background('#ffffff');
         imageMode(CORNER);
 
         if (bg != null) {
@@ -1510,7 +1449,6 @@ function update() {
 }
 
 
-
 function windowResized() {
     scaleCanvas();
 }
@@ -1550,24 +1488,24 @@ function avatarSelection() {
     var animation = loadAnimation(ss);
 
     //the position is the bottom left
-    previousBody = createSprite(8 * ASSET_SCALE + 14, 50 * ASSET_SCALE + 14);
+    previousBody = createSprite(windowWidth / 2 - 170, windowHeight / 2 - 25);
     previousBody.addAnimation("default", animation);
     previousBody.animation.stop();
     previousBody.mirrorX(-1);
     menuGroup.add(previousBody);
 
-    nextBody = createSprite(24 * ASSET_SCALE + 14, 50 * ASSET_SCALE + 14);
+    nextBody = createSprite(windowWidth / 2 - 135, windowHeight / 2 - 25);
     nextBody.addAnimation("default", animation);
     nextBody.animation.stop();
     menuGroup.add(nextBody);
 
-    previousColor = createSprite(90 * ASSET_SCALE + 14, 50 * ASSET_SCALE + 14);
+    previousColor = createSprite(windowWidth / 2 + 135, windowHeight / 2 - 25);
     previousColor.addAnimation("default", animation);
     previousColor.animation.stop();
     previousColor.mirrorX(-1);
     menuGroup.add(previousColor);
 
-    nextColor = createSprite(106 * ASSET_SCALE + 14, 50 * ASSET_SCALE + 14);
+    nextColor = createSprite(windowWidth / 2 + 170, windowHeight / 2 - 25);
     nextColor.addAnimation("default", animation);
     nextColor.animation.stop();
     menuGroup.add(nextColor);
@@ -1924,8 +1862,10 @@ function mouseMoved() {
 
         //you know, at this point I"m not sure if you are using assets scaled by 2 for the areas
         //so I"m just gonna stretch the coordinates ok
-        var mx = floor(map(mouseX, 0, WIDTH, 0, areas.width));
-        var my = floor(map(mouseY, 0, HEIGHT, 0, areas.height));
+        // var mx = floor(map(mouseX, 0, WIDTH, 0, areas.width));
+        // var my = floor(map(mouseY, 0, HEIGHT, 0, areas.height));
+        var mx = mouseX;
+        var my = mouseY;
 
         var c = areas.get(mx, my);
         areaLabel = "";
