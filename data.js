@@ -2,7 +2,7 @@
 //they are either related to the rooms or shared with the server 
 module.exports.SETTINGS = {
     //if not specified by the url where is the starting point
-    defaultRoom: "likelikeOutside",
+    defaultRoom: "sunshineIsland",
     //minimum time between talk messages enforced by both client and server
     ANTI_SPAM: 1000,
     //shows up at first non lurking login
@@ -18,8 +18,7 @@ module.exports.SOUNDS = [
 ];
 
 module.exports.ROOMS = {
-
-    likelikeOutside: {
+    sunshineIsland: {
         bg: "white.png",
         frames: 2,
         frameDelay: 30,
@@ -30,5 +29,4 @@ module.exports.ROOMS = {
         bubblesY: 44,
         spawn: [14, 84, 119, 92],
     },
-
 };
