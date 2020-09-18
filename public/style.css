@@ -15,18 +15,18 @@ body {
 	height: 100vh;
 	margin: 0px;
 	padding: 0px;
-	background-color: #000;
+	background-color: white;
 	font-smooth: never;
 	-webkit-font-smoothing: none;
 	color: white;
-	/* overflow: hidden; */
+	overflow: hidden;
 }
 
 #canvas-container {
 	width: 100%;
 	height: calc(100% - 100px);
 	margin: auto;
-	color:#000;
+	color:white;
 }
 
 canvas {
@@ -48,10 +48,13 @@ canvas {
 }
 
 #interface {
-    display: block;
-    margin: auto;
+	z-index: 10;
+	display: block;
+	position: absolute;
+	/* margin: auto; */
+	width: 100vw;
     text-align: center;
-	margin-top: 8px;
+	bottom: 50px;
 	
 }
 
@@ -61,11 +64,7 @@ canvas {
 	/*width: 800px;*/
 	width: 100%;
 	margin: auto;
-}
-
-#talk-form {
-	width: 100%;
-	margin: auto;
+	color: white;
 	text-align: center;
 	
 }
@@ -80,7 +79,8 @@ canvas {
 	padding-left: 4px;
 	outline: none;
     font-size: 24px;
-    background-color: white;
+	background-color: none;
+	color: white;
 }
 
 .talk-field {
@@ -94,20 +94,22 @@ canvas {
 /*USERNAME*/
 
 .lobby-message {
-    font-size: 32px;
-	margin-bottom: 32px;
-	color: #00b2a9;
+	font-size: 48px;
+	margin-bottom: 48px;
+	color: white;
+	line-height: 0.8;
 }
 
 .lobby-error-message {
 	font-size: 32px;
-	color: #00b2a9;
+	color: white;
 }
 
 .lobby-field {
-	border: 4px solid #757575;
+	border: 4px solid white;
 	text-align: center;
 	width: 80%;
+	max-width: 600px;
 	outline: none;
 }
 
@@ -117,14 +119,13 @@ canvas {
 .avatar-button {
 	font-family: Cubano;
 	font-size: 24px;
-	margin: 0px;
+	/* margin: 0px; */
 	display: inline-block;
 	border: none;
 	text-align: center;
-	color: white;
-    background: #00b2a9;
+	color: #00b2a9;
+    background: white;
     outline: none;
-    border-bottom: 4px solid#424242;
     margin-left: auto;
     margin-right:auto;
     padding-top: 4px;
@@ -146,6 +147,8 @@ canvas {
   float: left;
   min-width: 120px;
   width:28%;
+  margin-top: 4px;
+  margin-left: 4px;
   
 }
 
@@ -215,13 +218,6 @@ canvas {
 	background: #b6fffb;
 }
 
-/*Animate join to make sure people don't miss it*/
-@keyframes glowing {
-    0% { background-color: #00b2a9; }
-    50% { background-color: #b6fffb;  }
-    100% { background-color: #00b2a9;  }
-}
-
 .join-button {
     animation: glowing 1300ms infinite;
 }
@@ -244,3 +240,24 @@ canvas {
 	transform: translate(-50%, -80%);
 	text-align: center;
 }
+
+#lobby-field {
+	background: none;
+}
+
+#chatField {
+	background: none;
+	border: 4px solid white;
+}
+
+::-webkit-input-placeholder { /* Edge */
+	color: white;
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color: white;
+  }
+  
+  ::placeholder {
+	color: white;
+  }

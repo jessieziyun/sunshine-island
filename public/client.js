@@ -8,6 +8,8 @@ The client and server version strings MUST be the same!
 If the server gets updated it can be restarted, but if there are active clients (users' open browsers) they could be outdated and create issues.
 */
 var VERSION = "1.0";
+var textOffset;
+var arrowOffset;
 
 //for testing purposes I can skip the login phase
 //and join with a random avatar
@@ -80,8 +82,8 @@ var TEXT_H = 8;
 var TEXT_PADDING = 3;
 var TEXT_LEADING = TEXT_H + 4;
 
-var LOGO_FILE = "welcome.png";
-var MENU_BG_FILE = "white.png";
+var LOGO_FILE = "logo.png";
+var MENU_BG_FILE = "menu.png";
 
 //how long does the text bubble stay
 var BUBBLE_TIME = 8;
@@ -272,7 +274,7 @@ function preload() {
     menuBg = loadImage(ASSETS_FOLDER + MENU_BG_FILE);
     arrowButton = loadImage(ASSETS_FOLDER + "arrowButton.png");
 
-    var logoSheet = loadSpriteSheet(ASSETS_FOLDER + LOGO_FILE, 804, 77, 1);
+    var logoSheet = loadSpriteSheet(ASSETS_FOLDER + LOGO_FILE, 246, 300, 1);
     logo = loadAnimation(logoSheet);
     logo.frameDelay = 10;
 
@@ -316,9 +318,8 @@ function preload() {
 
 //this is called when the assets are loaded
 function setup() {
-
     //create a canvas
-    canvas = createCanvas(window.innerWidth, window.innerHeight - 100);
+    canvas = createCanvas(window.innerWidth, window.innerHeight);
     //accept only the clicks on the canvas (not the ones on the UI)
     canvas.mousePressed(canvasPressed);
     canvas.mouseReleased(canvasReleased);
@@ -402,18 +403,11 @@ function setup() {
 
                         if (room.music != null) {
                             room.musicLoop = loadSound(ASSETS_FOLDER + room.music);
+                            // room.musicLoop.setVolume(0);
                             room.musicLoop.playMode('restart');
                         }
                     }
                 }
-
-                //load the misc images from data
-                var soundData = DATA.SOUNDS;
-                SOUNDS = {};
-                for (var i = 0; i < soundData.length; i++) {
-                    SOUNDS[soundData[i][0]] = loadSound(ASSETS_FOLDER + soundData[i][1]);
-                }
-
 
                 print(">>> DATA RECEIVED " + (DATA.ROOMS != null));
             }
@@ -456,18 +450,13 @@ function draw() {
             }
         }
 
-        for (var soundId in SOUNDS) {
-            if (!SOUNDS[soundId].isLoaded()) {
-                dataLoaded = false;
-            }
-        }
-
         if (dataLoaded)
             print("Room data and assets loaded");
     }
 
     if (dataLoaded && !gameStarted) {
         setupGame();
+        adjustForMobile();
     }
 
     //this is the actual game loop
@@ -683,7 +672,7 @@ function newGame() {
                         if (ROOMS[p.room].frames != null)
                             f = ROOMS[p.room].frames;
 
-                        var ss = loadSpriteSheet(bgg, NATIVE_WIDTH, NATIVE_HEIGHT, f);
+                        var ss = loadSpriteSheet(bgg, NATIVE_WIDTH, NATIVE_HEIGHT, 1);
                         bg = loadAnimation(ss);
 
                         if (ROOMS[p.room].frameDelay != null) {
@@ -712,7 +701,7 @@ function newGame() {
                     //start the music if any
                     //music is synched across clients
                     if (ROOMS[p.room].musicLoop != null && SOUND) {
-                        var vol = 1;
+                        var vol = 0.1;
                         if (ROOMS[p.room].musicVolume != null)
                             vol = ROOMS[p.room].musicVolume;
 
@@ -1073,7 +1062,6 @@ function newGame() {
 }
 
 
-
 //this p5 function is called continuously 60 times per second by default
 function update() {
 
@@ -1086,11 +1074,12 @@ function update() {
 
         textFont(font, FONT_SIZE * 4);
         textAlign(CENTER, BASELINE);
-        fill(0, 178, 169);
-        text("Body", windowWidth / 2 - 150, windowHeight / 2 - 50);
-        text("Color", windowWidth / 2 + 150, windowHeight / 2 - 50);
+        fill(255);
+        text("Body", windowWidth / 2 - textOffset, windowHeight / 2 - 25);
+        text("Color", windowWidth / 2 + textOffset, windowHeight / 2 - 25);
 
-        text("Choose your avatar", windowWidth / 2, windowHeight / 2 - 150);
+        text("Choose your", windowWidth / 2, windowHeight / 2 - 160);
+        text("avatar", windowWidth / 2, windowHeight / 2 - 120);
 
         menuGroup.draw();
 
@@ -1400,7 +1389,7 @@ function update() {
                 else
                     textAlign(CENTER, CENTER);
 
-                fill(0, 178, 169);
+                fill(255);
                 // rect(0, 0, width, height);
                 // fill(LABEL_NEUTRAL_COLOR);
                 //-1 to avoid blurry glitch
@@ -1428,12 +1417,12 @@ function update() {
                 var rw = tw + LONG_TEXT_PADDING * 2;
                 var rh = th + LONG_TEXT_PADDING * 2 + 20;
 
-                fill(0, 178, 169);
+                fill(255);
 
                 rect(floor(width / 2 - rw / 2), floor(height / 2 - rh / 2), floor(rw), floor(rh));
                 //rect(20, 20, 100, 50);
 
-                fill(LABEL_NEUTRAL_COLOR);
+                fill(0, 178, 169);
                 text(longText, floor(width / 2 - tw / 2 + LONG_TEXT_PADDING - 1)-20, floor(height / 2 - th / 2) + TEXT_LEADING, floor(tw)+40);
             }
         }//end long text
@@ -1488,24 +1477,24 @@ function avatarSelection() {
     var animation = loadAnimation(ss);
 
     //the position is the bottom left
-    previousBody = createSprite(windowWidth / 2 - 170, windowHeight / 2 - 25);
+    previousBody = createSprite(windowWidth / 2 - 170 + arrowOffset, windowHeight / 2);
     previousBody.addAnimation("default", animation);
     previousBody.animation.stop();
     previousBody.mirrorX(-1);
     menuGroup.add(previousBody);
 
-    nextBody = createSprite(windowWidth / 2 - 135, windowHeight / 2 - 25);
+    nextBody = createSprite(windowWidth / 2 - 135 + arrowOffset, windowHeight / 2);
     nextBody.addAnimation("default", animation);
     nextBody.animation.stop();
     menuGroup.add(nextBody);
 
-    previousColor = createSprite(windowWidth / 2 + 135, windowHeight / 2 - 25);
+    previousColor = createSprite(windowWidth / 2 + 135 - arrowOffset, windowHeight / 2);
     previousColor.addAnimation("default", animation);
     previousColor.animation.stop();
     previousColor.mirrorX(-1);
     menuGroup.add(previousColor);
 
-    nextColor = createSprite(windowWidth / 2 + 170, windowHeight / 2 - 25);
+    nextColor = createSprite(windowWidth / 2 + 170 - arrowOffset, windowHeight / 2);
     nextColor.addAnimation("default", animation);
     nextColor.animation.stop();
     menuGroup.add(nextColor);
@@ -1804,7 +1793,7 @@ function pushBubbles(b) {
 
 
 function isObstacle(x, y, room, a) {
-    var obs = true;
+    var obs = false;
 
     if (room != null && a != null) {
 
