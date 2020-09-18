@@ -12,7 +12,7 @@ body {
 	font-family: Cubano;
 	font-size: 32px;
 	width: 100vw;
-	height: 100vh;
+	height: 100%;
 	margin: 0px;
 	padding: 0px;
 	background-color: white;
@@ -20,6 +20,7 @@ body {
 	-webkit-font-smoothing: none;
 	color: white;
 	overflow: hidden;
+	position: fixed;
 }
 
 #canvas-container {
